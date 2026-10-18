@@ -86,8 +86,9 @@ def to_mono_16k(data: bytes, channels: int, sample_rate: int) -> bytes:
 class VoiceInput:
     """听取输入设备，边听边预览文字，停止后保存完整语音文件。"""
 
-    def __init__(self, transcriber):
+    def __init__(self, transcriber, output_dir=None):
         self.transcriber = transcriber
+        self.output_dir = output_dir
         self.is_running = False
         self.sample_rate = 16000
         self.chunk_duration = 3.0
@@ -111,6 +112,9 @@ class VoiceInput:
         self._stop_event = threading.Event()
         self._pa_continue = 0
         self._generation = 0
+
+    def set_output_dir(self, path):
+        self.output_dir = path
 
     def elapsed_seconds(self) -> float:
         if not self._started_at:
@@ -361,9 +365,9 @@ class VoiceInput:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"voice_{timestamp}.wav"
         try:
-            output_dir = Path.home() / "Documents" / "SpeechToMd"
-            output_dir.mkdir(parents=True, exist_ok=True)
-            output_path = output_dir / filename
+            base = Path(self.output_dir) if self.output_dir else (Path.home() / "Documents" / "SpeechToMd")
+            base.mkdir(parents=True, exist_ok=True)
+            output_path = base / filename
         except OSError:
             output_path = Path(tempfile.gettempdir()) / filename
         self._write_wav(str(output_path), pcm)

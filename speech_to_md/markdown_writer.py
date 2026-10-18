@@ -96,6 +96,7 @@ class MarkdownWriter:
             "model": "模型",
             "language": "语言",
             "timestamp": "转录时间",
+            "target_language": "目标语言",
             "duration": "时长",
         }
         return key_map.get(key, key.replace('_', ' ').title())

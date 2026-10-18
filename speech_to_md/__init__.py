@@ -1,7 +1,4 @@
-"""
-语音转文字应用程序包
-Speech to Markdown Application Package
-"""
+"""语音转文字应用程序包"""
 
-__version__ = "1.0.0"
+__version__ = "1.1.0-p0"
 __author__ = "SpeechToMd"
